@@ -2,16 +2,12 @@ import React, {useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {ReflectionServiceClient} from "./api-spec/protobuf/gen/js/reflection/v1/service_pb.client";
-import {createChannel, createClient} from "nice-grpc-web";
+import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
 
 function App() {
   useEffect(() => {
-    const channel = createChannel('http://localhost:9000')
-    const client = createClient(
-      ReflectionServiceClient,
-      channel,
-    );
-    client.getInfo().then((response) => {
+    const reflectionClient = new ReflectionServiceClient(new GrpcWebFetchTransport({ baseUrl: 'http://localhost:9000' }));
+    reflectionClient.getInfo().then((response) => {
       console.log(response);
     })
   }, [])
